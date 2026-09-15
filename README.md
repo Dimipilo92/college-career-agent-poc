@@ -12,11 +12,11 @@ A declarative Microsoft 365 Copilot agent that follows the Figma's conversationa
 
 ## Run locally
 
-Requirements: Node.js 22 and Microsoft 365 Agents Toolkit 6.12 or later.
+Requirements: Windows, PowerShell 7, Node.js 22, and Microsoft 365 Agents Toolkit (`atk`).
 
 ```powershell
-npm install
-npm start
+.\scripts\bootstrap.ps1
+npm run dev:local
 ```
 
 In another terminal:
@@ -26,6 +26,8 @@ npm run test:smoke
 ```
 
 The MCP endpoint is `http://localhost:3000/mcp`. VS Code can connect through `.vscode/mcp.json`.
+
+See [Development environment](docs/development-environment.md) for the complete workstation setup, authentication, public tunnel, provisioning, validation, environment variables, and troubleshooting workflow.
 
 ## Test in Microsoft 365 Copilot
 
