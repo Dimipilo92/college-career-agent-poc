@@ -1,0 +1,48 @@
+# College & Career Agent prototype
+
+A declarative Microsoft 365 Copilot agent that follows the Figma's conversational goal-setting flow. Plain MCP tools preserve the prototype contract while sourcing coaching topics and guidance from Career Coach MCP.
+
+## Included scenario
+
+- Guided four-step goal intake in an MCP App
+- Numbered multi-select choices, free text, Back, Skip, and Submit controls
+- Career Coach recommended activities presented after submission
+- Optional conversational fallback launched from **Set a goal (text)**
+- Dynamic MCP tool discovery from the declarative agent
+
+## Run locally
+
+Requirements: Node.js 22 and Microsoft 365 Agents Toolkit 6.12 or later.
+
+```powershell
+npm install
+npm start
+```
+
+In another terminal:
+
+```powershell
+npm run test:smoke
+```
+
+The MCP endpoint is `http://localhost:3000/mcp`. VS Code can connect through `.vscode/mcp.json`.
+
+## Test in Microsoft 365 Copilot
+
+Microsoft 365 Copilot cannot call localhost directly. Create a persistent anonymous dev tunnel for port 3000, set `PLUGIN_SERVER_URL` in `env/.env.dev.user` to the tunnel's HTTPS `/mcp` URL, and provision the agent with Agents Toolkit.
+
+The tester must be signed into Microsoft 365, have Copilot access, and belong to a tenant where custom app upload is enabled. Anonymous MCP authentication is for development only; a deployed version requires OAuth 2.1 or Microsoft Entra SSO.
+
+## Prototype boundaries
+
+- `save_goal` keeps the Career Coach MCP schema behind the prototype's recommendation contract.
+- `get_goal` lets the conversational agent review the process-local goal and recommendations.
+- `open_goal_planner` serves the primary four-step MCP App experience.
+- Recommendations come from the public, read-only Career Coach MCP; goal persistence remains process-local.
+- Production identity, authorization, storage, notifications, and COACH schemas remain intentionally undefined.
+
+## References
+
+- [Build a declarative agent plugin from MCP](https://learn.microsoft.com/microsoft-365/copilot/extensibility/build-mcp-plugins)
+- [Debug MCP plugins with dev tunnels](https://learn.microsoft.com/microsoft-365/copilot/extensibility/plugin-debug-local)
+- [Career Coach MCP](https://mcp.aicareercoach.org/docs)

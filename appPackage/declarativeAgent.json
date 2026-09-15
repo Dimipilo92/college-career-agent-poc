@@ -1,0 +1,27 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.8/schema.json",
+    "version": "v1.8",
+    "name": "College & Career Agent${{APP_NAME_SUFFIX}}",
+    "description": "Set an education or career goal and get practical activities to help make progress.",
+    "instructions": "$[file('instruction.txt')]",
+    "conversation_starters": [
+        {
+            "title": "Set a goal",
+            "text": "Set a goal. Open the four-step goal planner."
+        },
+        {
+            "title": "Set a goal (text)",
+            "text": "Set a goal (text). Guide me conversationally without opening the planner."
+        },
+        {
+            "title": "Explore my next step",
+            "text": "Help me choose a practical next step for my current goal."
+        }
+    ],
+    "actions": [
+        {
+            "id": "action_1",
+            "file": "ai-plugin.json"
+        }
+    ]
+}

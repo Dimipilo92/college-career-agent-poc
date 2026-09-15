@@ -1,0 +1,23 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.4/schema.json",
+    "schema_version": "v2.4",
+    "name_for_human": "College & Career Goal Planner",
+    "description_for_human": "Opens the required interactive planner for setting, reviewing, or exploring a college or career goal.",
+    "contact_email": "dipierre@microsoft.com",
+    "namespace": "collegeCareerGoalPlanner",
+    "functions": [],
+    "runtimes": [
+        {
+            "type": "RemoteMCPServer",
+            "spec": {
+                "url": "${{PLUGIN_SERVER_URL}}"
+            },
+            "run_for_functions": [
+                "*"
+            ],
+            "auth": {
+                "type": "None"
+            }
+        }
+    ]
+}
