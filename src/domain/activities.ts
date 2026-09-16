@@ -1,4 +1,4 @@
-import type { Recommendation } from "./goal";
+import type { Recommendation } from "./goal.js";
 
 export type ActivityStatus = "recommended" | "active" | "completed";
 

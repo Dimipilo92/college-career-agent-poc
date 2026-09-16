@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { CoachingActivity } from "./activities.js";
 
 export const goalSchema = z.object({
   pathways: z.array(z.string()).min(1),
@@ -21,5 +22,6 @@ export interface Recommendation {
 export interface GoalPlan {
   goal: Goal;
   recommendations: Recommendation[];
+  activities: CoachingActivity[];
   recommendationSource: string;
 }
