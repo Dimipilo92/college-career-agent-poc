@@ -37,7 +37,7 @@ async function startHttpServer(serverFactory: () => Promise<McpServer>): Promise
   });
 
   app.listen(port, "0.0.0.0", () => {
-    console.log(`Compass Now MCP server listening on http://localhost:${port}/mcp`);
+    console.log(`Compass MCP server listening on http://localhost:${port}/mcp`);
   });
 }
 

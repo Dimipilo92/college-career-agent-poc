@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.8/schema.json",
     "version": "v1.8",
-    "name": "Compass Now (${{APP_NAME_SUFFIX}})",
+    "name": "Compass (${{APP_NAME_SUFFIX}})",
     "description": "Explore education and career options with guidance from Career Coach.",
     "instructions": "$[file('instruction.txt')]",
     "conversation_starters": [

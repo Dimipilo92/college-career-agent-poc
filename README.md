@@ -1,4 +1,4 @@
-# Compass Now
+# Compass
 
 A thin Microsoft 365 Copilot experience over Career Coach MCP, with Figma-derived MCP App components reserved for complex interactive tasks.
 

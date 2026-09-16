@@ -4,7 +4,7 @@ import { callCareerCoachTool, listCareerCoachTools } from "./src/integrations/ca
 
 export async function createServer(): Promise<McpServer> {
   const server = new McpServer({
-    name: "Compass Now",
+    name: "Compass",
     version: "0.1.0"
   });
 
