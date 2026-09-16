@@ -6,9 +6,12 @@
   "scripts": {
     "bootstrap": "pwsh -NoProfile -File scripts/bootstrap.ps1",
     "build": "tsc --noEmit && tsc -p tsconfig.server.json && cross-env INPUT=experimental-goal-planner.html vite build",
+    "check": "npm run build && npm run test:scaffolds",
     "doctor": "pwsh -NoProfile -File scripts/doctor.ps1",
     "dev:local": "pwsh -NoProfile -File scripts/start-dev.ps1 -SkipTunnel",
+    "dev:widgets": "vite --host 127.0.0.1",
     "start": "concurrently --raw \"cross-env NODE_ENV=development INPUT=experimental-goal-planner.html vite build --watch\" \"tsx watch main.ts\"",
+    "test:scaffolds": "tsx scripts/verify-scaffolds.ts",
     "test:smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {

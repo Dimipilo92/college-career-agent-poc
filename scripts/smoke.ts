@@ -47,7 +47,13 @@ try {
 
   const resource = await client.readResource({ uri: "ui://coach/goal-planner.html" });
   const html = resource.contents[0]?.text;
-  if (typeof html !== "string" || !html.includes("How would you like the agent to help you?") || !html.includes("How often do you want to set milestones for this plan?")) {
+  if (
+    typeof html !== "string" ||
+    !html.includes("How would you like the agent to help you?") ||
+    !html.includes("How often do you want to set milestones for this plan?") ||
+    !html.includes("elicitation-panel") ||
+    !html.includes("aria-pressed")
+  ) {
     throw new Error("The four-step goal planner resource was not returned.");
   }
 

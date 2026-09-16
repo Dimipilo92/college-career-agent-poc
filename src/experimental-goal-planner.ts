@@ -1,8 +1,14 @@
 import { App } from "@modelcontextprotocol/ext-apps";
+import {
+  escapeHtml,
+  renderChoiceList,
+  renderElicitationFooter,
+  renderElicitationPanel,
+  type ElicitationChoice
+} from "./elicitation-widget";
+import type { Goal, Recommendation } from "./domain/goal";
 import "./experimental-goal-planner.css";
 
-interface Recommendation { id: string; title: string; duration: string; description: string; }
-interface Goal { pathways: string[]; support: string[]; focus: string; cadence: string; }
 interface PlannerResult { goal?: Goal; recommendations?: Recommendation[]; recommendationSource?: string; }
 
 const rootElement = document.querySelector<HTMLElement>("#app");
@@ -38,29 +44,26 @@ const choiceSteps = [
   }
 ];
 
-function escapeHtml(value: string): string {
-  const node = document.createElement("span");
-  node.textContent = value;
-  return node.innerHTML;
-}
-
 function renderOptions(options: string[], selected: string[], dataAttribute: string): string {
-  return options.map((option, index) => `<button class="option ${selected.includes(option) ? "selected" : ""}" ${dataAttribute}="${escapeHtml(option)}"><span class="option-number">${index + 1}</span><span>${escapeHtml(option)}</span></button>`).join("");
+  const choices: ElicitationChoice[] = options.map((label) => ({ label }));
+  return renderChoiceList(choices, selected, dataAttribute);
 }
 
-function navigation(primaryLabel: string, primaryId: string, disabled: boolean, canSkip = false): string {
-  return `<footer>${currentStep > 0 ? `<button id="back">Back</button>` : ""}<div class="forward-actions">${canSkip ? `<button id="skip">Skip</button>` : ""}<button class="primary" id="${primaryId}" ${disabled ? "disabled" : ""}>${primaryLabel}</button></div></footer>`;
+function navigation(primaryLabel: string, primaryId: string, disabled: boolean, canSkip = false, canEnterCustomAnswer = false): string {
+  return renderElicitationFooter(primaryLabel, primaryId, disabled, currentStep > 0, canSkip, canEnterCustomAnswer);
 }
 
 function renderStep(): void {
   if (currentStep < choiceSteps.length) {
     const step = choiceSteps[currentStep];
     const selected = draft[step.field];
-    root.innerHTML = `<section class="planner">
-      <header><div><span>Get customized results</span><h1>${escapeHtml(step.title)} <small>(${step.hint})</small></h1></div><strong>${currentStep + 1} of 4</strong></header>
-      <div class="options">${renderOptions(step.options, selected, "data-choice")}</div>
-      ${navigation("Next", "next", selected.length === 0)}
-    </section>`;
+    root.innerHTML = renderElicitationPanel({
+      title: `${step.title} (${step.hint})`,
+      currentStep: currentStep + 1,
+      totalSteps: 4,
+      content: renderOptions(step.options, selected, "data-choice"),
+      footer: navigation("Next", "next", selected.length === 0, false, true)
+    });
     root.querySelectorAll<HTMLButtonElement>("[data-choice]").forEach((button) => {
       button.addEventListener("click", () => {
         const value = button.dataset.choice;
@@ -71,20 +74,22 @@ function renderStep(): void {
       });
     });
   } else if (currentStep === 2) {
-    root.innerHTML = `<section class="planner">
-      <header><div><span>Get customized results</span><h1>What are you working toward?</h1></div><strong>3 of 4</strong></header>
-      <p>Any specific interests that you’re interested in applying to a career? For example: math, public speaking, art, or teaching others.</p>
-      <textarea id="focus" rows="4" placeholder="Type an answer">${escapeHtml(draft.focus)}</textarea>
-      ${navigation("Next", "next", false, true)}
-    </section>`;
+    root.innerHTML = renderElicitationPanel({
+      title: "What are you working toward?",
+      currentStep: 3,
+      totalSteps: 4,
+      content: `<p>Any specific interests that you’re interested in applying to a career? For example: math, public speaking, art, or teaching others.</p><textarea id="focus" rows="4" placeholder="Type an answer">${escapeHtml(draft.focus)}</textarea>`,
+      footer: navigation("Next", "next", false, true)
+    });
   } else {
     const cadences = ["Daily", "Weekly", "Every two weeks", "Monthly"];
-    root.innerHTML = `<section class="planner">
-      <header><div><span>Get customized results</span><h1>How often do you want to set milestones for this plan?</h1></div><strong>4 of 4</strong></header>
-      <div class="options two-columns">${renderOptions(cadences.map((value) => value === "Weekly" ? "Weekly (recommended)" : value), draft.cadence === "Weekly" ? ["Weekly (recommended)"] : [draft.cadence], "data-cadence")}</div>
-      ${navigation("Submit", "submit", !draft.cadence, true)}
-      <p id="status" role="status"></p>
-    </section>`;
+    root.innerHTML = renderElicitationPanel({
+      title: "How often do you want to set milestones for this plan?",
+      currentStep: 4,
+      totalSteps: 4,
+      content: `<div class="two-columns">${renderOptions(cadences.map((value) => value === "Weekly" ? "Weekly (recommended)" : value), draft.cadence === "Weekly" ? ["Weekly (recommended)"] : [draft.cadence], "data-cadence")}</div><p id="status" role="status"></p>`,
+      footer: navigation("Submit", "submit", !draft.cadence, true)
+    });
     root.querySelectorAll<HTMLButtonElement>("[data-cadence]").forEach((button) => {
       button.addEventListener("click", () => {
         draft.cadence = button.dataset.cadence?.replace(" (recommended)", "") ?? "";
@@ -101,6 +106,11 @@ function renderStep(): void {
     if (currentStep === 2) draft.focus = root.querySelector<HTMLTextAreaElement>("#focus")?.value.trim() ?? "";
     currentStep += 1;
     renderStep();
+  });
+  root.querySelector<HTMLButtonElement>("#custom-answer")?.addEventListener("click", () => {
+    currentStep = 2;
+    renderStep();
+    root.querySelector<HTMLTextAreaElement>("#focus")?.focus();
   });
   root.querySelector<HTMLButtonElement>("#skip")?.addEventListener("click", () => {
     if (currentStep === 2) {

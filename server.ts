@@ -3,23 +3,14 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
-import { getCareerCoachRecommendations, type Recommendation } from "./careerCoach.js";
+import { getCareerCoachRecommendations } from "./careerCoach.js";
+import { goalSchema } from "./src/domain/goal.js";
+import { createInMemoryGoalStore } from "./src/storage/goal-store.js";
 
 const resourceUri = "ui://coach/goal-planner.html";
 const distDirectory = path.join(import.meta.dirname, "dist");
 
-const goalSchema = z.object({
-  pathways: z.array(z.string()).min(1),
-  support: z.array(z.string()).min(1),
-  focus: z.string().min(1),
-  cadence: z.string().min(1),
-  resumeUrl: z.string().optional()
-});
-
-type Goal = z.infer<typeof goalSchema>;
-
-let savedGoal: Goal | undefined;
-let savedRecommendations: Recommendation[] = [];
+const goalStore = createInMemoryGoalStore();
 
 export function createServer(): McpServer {
   const server = new McpServer({
@@ -49,10 +40,17 @@ export function createServer(): McpServer {
       description: "Return the current goal and its recommended activities, if a goal has been saved.",
       inputSchema: z.object({})
     },
-    async () => ({
-      content: [{ type: "text", text: savedGoal ? `Current goal: ${savedGoal.focus}` : "No goal has been saved yet." }],
-      structuredContent: { goal: savedGoal, recommendations: savedRecommendations, recommendationSource: "Career Coach MCP" }
-    })
+    async () => {
+      const plan = goalStore.get();
+      return {
+        content: [{ type: "text", text: plan ? `Current goal: ${plan.goal.focus}` : "No goal has been saved yet." }],
+        structuredContent: {
+          goal: plan?.goal,
+          recommendations: plan?.recommendations ?? [],
+          recommendationSource: plan?.recommendationSource ?? "Career Coach MCP"
+        }
+      };
+    }
   );
 
   server.registerTool(
@@ -63,11 +61,12 @@ export function createServer(): McpServer {
       inputSchema: goalSchema
     },
     async (goal) => {
-      savedGoal = goal;
-      savedRecommendations = await getCareerCoachRecommendations(goal);
+      const recommendations = await getCareerCoachRecommendations(goal);
+      const plan = { goal, recommendations, recommendationSource: "Career Coach MCP" };
+      goalStore.save(plan);
       return {
         content: [{ type: "text", text: `Saved goal: ${goal.focus}` }],
-        structuredContent: { goal, recommendations: savedRecommendations, recommendationSource: "Career Coach MCP" }
+        structuredContent: plan
       };
     }
   );

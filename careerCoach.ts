@@ -1,19 +1,9 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { z } from "zod";
+import type { GoalContext, Recommendation } from "./src/domain/goal.js";
 
-interface GoalContext {
-  pathways: string[];
-  support: string[];
-  focus: string;
-}
-
-export interface Recommendation {
-  id: string;
-  title: string;
-  duration: string;
-  description: string;
-}
+export type { Recommendation } from "./src/domain/goal.js";
 
 const guidanceSchema = z.object({
   id: z.string(),

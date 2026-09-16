@@ -27,6 +27,18 @@ npm run test:smoke
 
 The MCP endpoint is `http://localhost:3000/mcp`. VS Code can connect through `.vscode/mcp.json`.
 
+To build and review MCP App UI without a host handshake, run `npm run dev:widgets` and open `http://127.0.0.1:5173/widget-gallery.html`. New Figma experience chunks should reuse the primitives in `src/elicitation-widget.ts` and add a representative state to the gallery.
+
+Use the [feature delivery matrix](docs/feature-matrix.md) to choose the next slice. Delivered paths remain in place; scaffolded work has a typed module under `src/experiences/`, and planned work identifies its future module before implementation begins.
+
+Run the iteration guardrail before submitting a change:
+
+```powershell
+npm run check
+```
+
+This compiles the server and widgets, checks unique experience IDs, verifies that every delivered or scaffolded catalog path exists, and ensures delivered MCP Apps declare their tool and resource registrations.
+
 See [Development environment](docs/development-environment.md) for the complete workstation setup, authentication, public tunnel, provisioning, validation, environment variables, and troubleshooting workflow.
 
 ## Test in Microsoft 365 Copilot
