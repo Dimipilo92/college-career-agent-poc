@@ -1,16 +1,13 @@
-# College & Career Agent prototype
+# Compass Now
 
-A declarative Microsoft 365 Copilot agent that follows the Figma's conversational goal-setting flow. Plain MCP tools preserve the prototype contract while sourcing coaching topics and guidance from Career Coach MCP.
+A thin Microsoft 365 Copilot experience over Career Coach MCP, with Figma-derived MCP App components reserved for complex interactive tasks.
 
 ## Included scenario
 
-- Guided four-step goal intake in an MCP App
-- Numbered multi-select choices, free text, Back, Skip, and Submit controls
-- Career Coach recommended activities presented after submission
-- Coaching dashboard with recommended, active, and completed activities
-- Durable local goal state with Start and Complete activity actions
-- Optional conversational fallback launched from **Set a goal (text)**
-- Dynamic MCP tool discovery from the declarative agent
+- Conversational coaching driven by published Career Coach guidance
+- Transparent proxies for the complete live Career Coach tool catalog
+- One Figma-aligned **Set a goal** entry point
+- An experimental folder for future Figma-backed MCP App experiences
 
 ## Run locally
 
@@ -29,17 +26,24 @@ npm run test:smoke
 
 The MCP endpoint is `http://localhost:3000/mcp`. VS Code can connect through `.vscode/mcp.json`.
 
-To build and review MCP App UI without a host handshake, run `npm run dev:widgets` and open `http://127.0.0.1:5173/widget-gallery.html`. New Figma experience chunks should reuse the primitives in `src/elicitation-widget.ts` and add a representative state to the gallery.
-
-Use the [feature delivery matrix](docs/feature-matrix.md) to choose the next slice. Delivered paths remain in place; scaffolded work has a typed module under `src/experiences/`, and planned work identifies its future module before implementation begins.
-
 Run the iteration guardrail before submitting a change:
 
 ```powershell
 npm run check
 ```
 
-This compiles the server and widgets, checks unique experience IDs, verifies that every delivered or scaffolded catalog path exists, and ensures delivered MCP Apps declare their tool and resource registrations.
+This type-checks the MCP server and Career Coach proxy.
+
+## Repository structure
+
+```text
+appPackage/                 Microsoft 365 agent metadata and instructions
+src/integrations/           Career Coach MCP adapter
+src/ui/elicitation/         Retained Figma UI kit; not registered at runtime
+src/ui/experiences/         Experimental home for future MCP Apps
+server.ts                   Dynamic Career Coach MCP proxy
+main.ts                     HTTP and stdio transports
+```
 
 See [Development environment](docs/development-environment.md) for the complete workstation setup, authentication, public tunnel, provisioning, validation, environment variables, and troubleshooting workflow.
 
@@ -51,12 +55,11 @@ The tester must be signed into Microsoft 365, have Copilot access, and belong to
 
 ## Prototype boundaries
 
-- `save_goal` keeps the Career Coach MCP schema behind the prototype's recommendation contract.
-- `get_goal` lets the conversational agent review the durable local goal, recommendations, and activity progress.
-- `open_goal_planner` serves the primary four-step MCP App experience.
-- `open_coaching_dashboard` serves the main progress and next-action MCP App experience.
-- Recommendations come from the public, read-only Career Coach MCP; local JSON persistence is single-user development state only.
-- Production identity, authorization, tenant-scoped storage, notifications, and COACH schemas remain intentionally undefined.
+- The complete live Career Coach tool catalog is discovered and proxied without local routing logic.
+- Career Coach guidance drives conversational questions, pacing, and recommendations.
+- Future Figma-derived experiences have an explicit experimental home under `src/ui/experiences/`.
+- No MCP App resource, local goal store, or fixed intake workflow is currently registered.
+- Production identity, authorization, and notifications remain intentionally undefined.
 
 ## References
 

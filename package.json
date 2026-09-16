@@ -5,17 +5,14 @@
   "type": "module",
   "scripts": {
     "bootstrap": "pwsh -NoProfile -File scripts/bootstrap.ps1",
-    "build": "tsc --noEmit && tsc -p tsconfig.server.json && cross-env INPUT=experimental-goal-planner.html vite build && cross-env INPUT=coaching-dashboard.html vite build",
-    "check": "npm run build && npm run test:scaffolds",
+    "build": "tsc --noEmit && tsc -p tsconfig.server.json",
+    "check": "npm run build",
     "doctor": "pwsh -NoProfile -File scripts/doctor.ps1",
     "dev:local": "pwsh -NoProfile -File scripts/start-dev.ps1 -SkipTunnel",
-    "dev:widgets": "vite --host 127.0.0.1",
-    "start": "concurrently --raw \"cross-env NODE_ENV=development INPUT=experimental-goal-planner.html vite build --watch\" \"cross-env NODE_ENV=development INPUT=coaching-dashboard.html vite build --watch\" \"tsx watch main.ts\"",
-    "test:scaffolds": "tsx scripts/verify-scaffolds.ts",
+    "start": "tsx watch main.ts",
     "test:smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {
-    "@modelcontextprotocol/ext-apps": "^1.7.5",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -25,11 +22,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
     "@types/node": "^22.19.5",
-    "concurrently": "^9.2.1",
-    "cross-env": "^10.1.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "vite": "^6.0.0",
-    "vite-plugin-singlefile": "^2.3.0"
+    "typescript": "^5.9.3"
   }
 }

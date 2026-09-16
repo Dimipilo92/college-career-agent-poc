@@ -1,10 +1,10 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.4/schema.json",
     "schema_version": "v2.4",
-    "name_for_human": "College & Career Goal Planner",
-    "description_for_human": "Opens the required interactive planner for setting, reviewing, or exploring a college or career goal.",
+    "name_for_human": "Compass Now",
+    "description_for_human": "Connects Microsoft 365 Copilot to the live Career Coach MCP tool catalog.",
     "contact_email": "dipierre@microsoft.com",
-    "namespace": "collegeCareerGoalPlanner",
+    "namespace": "collegeCareerCoach",
     "functions": [],
     "runtimes": [
         {

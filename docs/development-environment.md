@@ -1,6 +1,6 @@
 # Development environment
 
-This project runs a Microsoft 365 declarative agent against a local MCP gateway. The gateway serves the MCP App, stores prototype goal state in memory, and calls the public Career Coach MCP for recommendations.
+This project runs a Microsoft 365 declarative agent against a local MCP gateway. The gateway transparently proxies the live tool catalog from the public Career Coach MCP.
 
 ## Architecture
 
@@ -8,7 +8,7 @@ This project runs a Microsoft 365 declarative agent against a local MCP gateway.
 Microsoft 365 Copilot
   -> public HTTPS dev tunnel
   -> local Streamable HTTP MCP endpoint (/mcp)
-  -> goal planner MCP App and save_goal tool
+  -> dynamic Career Coach tool proxy
   -> Career Coach MCP (https://mcp.aicareercoach.org/mcp/)
 ```
 
@@ -26,7 +26,7 @@ The local endpoint is `http://localhost:3000/mcp`. Microsoft 365 cannot call loc
 - A tenant that permits custom app upload
 - Network access to `https://mcp.aicareercoach.org/mcp/`
 
-The app itself has no Azure resources, database, or local secrets. Career Coach MCP is anonymous and read-only. Microsoft 365 authentication is needed only to provision and test the declarative agent.
+The app itself has no Azure resources, database, local coaching engine, or local state. Career Coach MCP is anonymous and read-only. Microsoft 365 authentication is needed only to provision and test the declarative agent.
 
 ## Repository setup
 
@@ -137,10 +137,10 @@ The explicit process environment value prevents a stale shell value from silentl
 | `npm ci` | Restore locked dependencies |
 | `npm run bootstrap` | Prepare dependencies, user environment, and diagnostics |
 | `npm run doctor` | Check tools, auth, configuration, dependencies, and port 3000 |
-| `npm run dev:local` | Run the local MCP server and app build watcher |
+| `npm run dev:local` | Run the local MCP server |
 | `.\scripts\start-dev.ps1` | Run the server plus a public tunnel |
-| `npm run build` | Type-check server and app, then create the single-file MCP App |
-| `npm run test:smoke` | Exercise tools, app resource, goal state, and live Career Coach MCP |
+| `npm run build` | Type-check the MCP server |
+| `npm run test:smoke` | Verify the live tool catalog and guidance pass through from Career Coach MCP |
 | `atk validate -i false` | Validate the Microsoft 365 app package |
 | `atk provision --env dev` | Package, upload, and publish the development agent |
 
@@ -160,10 +160,10 @@ The explicit process environment value prevents a stale shell value from silentl
 
 ## Runtime behavior
 
-- `open_goal_planner` serves the four-step MCP App resource.
-- `save_goal` calls Career Coach MCP only after submission.
-- `get_goal` returns process-local goal and recommendation state.
-- Restarting the server clears saved goals.
+- The live Career Coach tool catalog is exposed without local routing logic.
+- Tool arguments and responses pass through unchanged.
+- The declarative agent selects the relevant Career Coach capability.
+- Figma-derived UI stays inactive until a complex task has a reviewed MCP App interaction.
 - The smoke test intentionally calls the live Career Coach MCP; it requires internet access and fails when that service is unavailable.
 
 ## Troubleshooting

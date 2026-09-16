@@ -6,14 +6,14 @@ import express from "express";
 import type { Request, Response } from "express";
 import { createServer } from "./server.js";
 
-async function startHttpServer(serverFactory: () => McpServer): Promise<void> {
+async function startHttpServer(serverFactory: () => Promise<McpServer>): Promise<void> {
   const port = Number.parseInt(process.env.PORT ?? "3000", 10);
   const app = express();
 
   app.use(cors());
   app.use(express.json());
   app.all("/mcp", async (request: Request, response: Response) => {
-    const server = serverFactory();
+    const server = await serverFactory();
     const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
 
     response.on("close", () => {
@@ -37,12 +37,13 @@ async function startHttpServer(serverFactory: () => McpServer): Promise<void> {
   });
 
   app.listen(port, "0.0.0.0", () => {
-    console.log(`COACH prototype MCP server listening on http://localhost:${port}/mcp`);
+    console.log(`Compass Now MCP server listening on http://localhost:${port}/mcp`);
   });
 }
 
 if (process.argv.includes("--stdio")) {
-  await createServer().connect(new StdioServerTransport());
+  const server = await createServer();
+  await server.connect(new StdioServerTransport());
 } else {
   await startHttpServer(createServer);
 }

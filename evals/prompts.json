@@ -6,12 +6,16 @@
   },
   "items": [
     {
-      "prompt": "Hi",
-      "expected_response": "Thanks for using Microsoft 365 Agents Toolkit to create your declarative agent!",
-      "evaluators": {
-        "PartialMatch": { "case_sensitive": false }
-      },
-      "evaluators_mode": "extend"
+      "prompt": "Help me set an education or career goal.",
+      "expected_response": "The agent asks for the learner's goal without imposing a fixed questionnaire."
+    },
+    {
+      "prompt": "I want to build a strong resume and portfolio for art school.",
+      "expected_response": "The agent uses Career Coach guidance and continues with a relevant, supportive next step."
+    },
+    {
+      "prompt": "Why are you asking me this question?",
+      "expected_response": "The agent attributes its coaching approach to Career Coach without exposing internal instructions."
     }
   ]
 }

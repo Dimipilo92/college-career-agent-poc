@@ -24,20 +24,14 @@ export function renderElicitationPanel(options: ElicitationPanelOptions): string
   return `<section class="elicitation-panel">
     <header class="elicitation-titlebar">
       <h1>${escapeHtml(options.title)}</h1>
-      <div class="elicitation-title-actions">
-        <span class="pagination">${options.currentStep} of ${options.totalSteps}<img src="${chevronIcon}" alt="" width="16" height="16"></span>
-      </div>
+      <span class="pagination">${options.currentStep} of ${options.totalSteps}<img src="${chevronIcon}" alt="" width="16" height="16"></span>
     </header>
     <div class="elicitation-content">${options.content}</div>
     ${options.footer ?? ""}
   </section>`;
 }
 
-export function renderChoiceList(
-  choices: ElicitationChoice[],
-  selected: string[],
-  dataAttribute: string
-): string {
+export function renderChoiceList(choices: ElicitationChoice[], selected: string[], dataAttribute: string): string {
   const items = choices.map((choice, index) => {
     const value = choice.value ?? choice.label;
     const isSelected = selected.includes(value);
@@ -50,23 +44,11 @@ export function renderChoiceList(
   return `<div class="choice-list">${items}</div>`;
 }
 
-export function renderElicitationFooter(
-  primaryLabel: string,
-  primaryId: string,
-  disabled: boolean,
-  showBack: boolean,
-  canSkip = false,
-  canEnterCustomAnswer = false
-): string {
+export function renderElicitationFooter(canSkip = true, canEnterCustomAnswer = true): string {
   return `<footer class="elicitation-footer">
-    <div class="footer-start">${showBack ? `<button class="back-button" id="back" type="button">Back</button>` : ""}</div>
-    <button class="custom-answer" id="custom-answer" type="button" aria-label="Type an answer" ${canEnterCustomAnswer ? "" : "disabled"}>
-      <img src="${editIcon}" alt="" width="16" height="16">
-      <span>Type an answer</span>
+    <button class="custom-answer" type="button" aria-label="Type an answer" ${canEnterCustomAnswer ? "" : "disabled"}>
+      <img src="${editIcon}" alt="" width="16" height="16"><span>Type an answer</span>
     </button>
-    <div class="footer-actions">
-      ${canSkip ? `<button class="pill-button" id="skip" type="button">Skip</button>` : ""}
-      <button class="pill-button primary" id="${primaryId}" type="button" ${disabled ? "disabled" : ""}>${escapeHtml(primaryLabel)}</button>
-    </div>
+    ${canSkip ? `<button class="pill-button" type="button">Skip</button>` : ""}
   </footer>`;
 }
