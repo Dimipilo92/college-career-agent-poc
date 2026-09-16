@@ -5,14 +5,16 @@
   "type": "module",
   "scripts": {
     "bootstrap": "pwsh -NoProfile -File scripts/bootstrap.ps1",
-    "build": "tsc --noEmit && tsc -p tsconfig.server.json",
+    "build": "tsc --noEmit && tsc -p tsconfig.server.json && npm run build:ui",
+    "build:ui": "tsx scripts/build-ui.ts",
     "check": "npm run build",
     "doctor": "pwsh -NoProfile -File scripts/doctor.ps1",
     "dev:local": "pwsh -NoProfile -File scripts/start-dev.ps1 -SkipTunnel",
-    "start": "tsx watch main.ts",
+    "start": "npm run build:ui && tsx watch main.ts",
     "test:smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {
+    "@modelcontextprotocol/ext-apps": "^1.7.5",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -22,6 +24,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
     "@types/node": "^22.19.5",
+    "esbuild": "^0.28.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

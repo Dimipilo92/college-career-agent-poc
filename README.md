@@ -6,6 +6,7 @@ A thin Microsoft 365 Copilot experience over Career Coach MCP, with Figma-derive
 
 - Conversational coaching driven by published Career Coach guidance
 - Transparent proxies for the complete live Career Coach tool catalog
+- A read-only MCP App for host-orchestrated Career Coach comparisons and result sets
 - One Figma-aligned **Set a goal** entry point
 - An experimental folder for future Figma-backed MCP App experiences
 
@@ -40,7 +41,7 @@ This type-checks the MCP server and Career Coach proxy.
 appPackage/                 Microsoft 365 agent metadata and instructions
 src/integrations/           Career Coach MCP adapter
 src/ui/elicitation/         Retained Figma UI kit; not registered at runtime
-src/ui/experiences/         Experimental home for future MCP Apps
+src/ui/experiences/         Active and experimental MCP App experiences
 server.ts                   Dynamic Career Coach MCP proxy
 main.ts                     HTTP and stdio transports
 ```
@@ -58,7 +59,7 @@ The tester must be signed into Microsoft 365, have Copilot access, and belong to
 - The complete live Career Coach tool catalog is discovered and proxied without local routing logic.
 - Career Coach guidance drives conversational questions, pacing, and recommendations.
 - Future Figma-derived experiences have an explicit experimental home under `src/ui/experiences/`.
-- No MCP App resource, local goal store, or fixed intake workflow is currently registered.
+- One MCP App resource presents grounded options after Copilot calls Career Coach; no local goal store or fixed intake workflow is registered.
 - Production identity, authorization, and notifications remain intentionally undefined.
 
 ## References
