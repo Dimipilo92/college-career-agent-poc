@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.30/MicrosoftTeams.schema.json",
     "manifestVersion": "1.30",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "id": "${{TEAMS_APP_ID}}",
     "developer": {
         "name": "College & Career Prototype Team",
@@ -14,7 +14,7 @@
         "outline": "outline.png"
     },
     "name": {
-        "short": "Career Agent${{APP_NAME_SUFFIX}}",
+        "short": "Career Agent (${{APP_NAME_SUFFIX}})",
         "full": "College & Career Agent Prototype"
     },
     "description": {

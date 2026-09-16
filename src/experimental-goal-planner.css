@@ -208,6 +208,11 @@ button:disabled {
 #status {
   color: #666;
 }
+.planner-actions {
+  width: min(768px, 100%);
+  margin: 8px auto 0;
+  padding: 0 16px;
+}
 .recommendations {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -231,6 +236,9 @@ article p {
 .gallery-heading {
   width: min(768px, 100%);
   margin: 0 auto 20px;
+}
+.dashboard-gallery-heading {
+  margin-top: 44px;
 }
 .gallery-heading span {
   color: rgba(0, 0, 0, 0.64);

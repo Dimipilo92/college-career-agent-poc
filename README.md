@@ -7,6 +7,8 @@ A declarative Microsoft 365 Copilot agent that follows the Figma's conversationa
 - Guided four-step goal intake in an MCP App
 - Numbered multi-select choices, free text, Back, Skip, and Submit controls
 - Career Coach recommended activities presented after submission
+- Coaching dashboard with recommended, active, and completed activities
+- Durable local goal state with Start and Complete activity actions
 - Optional conversational fallback launched from **Set a goal (text)**
 - Dynamic MCP tool discovery from the declarative agent
 
@@ -50,10 +52,11 @@ The tester must be signed into Microsoft 365, have Copilot access, and belong to
 ## Prototype boundaries
 
 - `save_goal` keeps the Career Coach MCP schema behind the prototype's recommendation contract.
-- `get_goal` lets the conversational agent review the process-local goal and recommendations.
+- `get_goal` lets the conversational agent review the durable local goal, recommendations, and activity progress.
 - `open_goal_planner` serves the primary four-step MCP App experience.
-- Recommendations come from the public, read-only Career Coach MCP; goal persistence remains process-local.
-- Production identity, authorization, storage, notifications, and COACH schemas remain intentionally undefined.
+- `open_coaching_dashboard` serves the main progress and next-action MCP App experience.
+- Recommendations come from the public, read-only Career Coach MCP; local JSON persistence is single-user development state only.
+- Production identity, authorization, tenant-scoped storage, notifications, and COACH schemas remain intentionally undefined.
 
 ## References
 

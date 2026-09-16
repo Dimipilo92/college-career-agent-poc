@@ -6,10 +6,12 @@ import {
   renderElicitationPanel,
   type ElicitationChoice
 } from "./elicitation-widget";
-import type { Goal, Recommendation } from "./domain/goal";
+import { renderCoachingDashboard } from "./coaching-dashboard-view";
+import type { Goal, GoalPlan } from "./domain/goal";
+import "./coaching-dashboard.css";
 import "./experimental-goal-planner.css";
 
-interface PlannerResult { goal?: Goal; recommendations?: Recommendation[]; recommendationSource?: string; }
+type PlannerResult = Partial<GoalPlan>;
 
 const rootElement = document.querySelector<HTMLElement>("#app");
 if (!rootElement) throw new Error("App root not found");
@@ -138,14 +140,34 @@ async function submitGoal(): Promise<void> {
 
 function renderResult(result: PlannerResult): void {
   if (!result.goal) return renderStep();
-  root.innerHTML = `<section class="planner"><header><div><span>Your goal</span><h1>${escapeHtml(result.goal.focus)}</h1></div><button id="edit">Edit goal</button></header>
-    <p>Timeline: ${escapeHtml(result.goal.cadence.toLowerCase())} milestones · Recommendations from ${escapeHtml(result.recommendationSource ?? "Career Coach MCP")}</p>
-    <div class="recommendations">${(result.recommendations ?? []).map((item) => `<article><small>${escapeHtml(item.duration)}</small><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.description)}</p></article>`).join("")}</div>
-  </section>`;
+  const plan: GoalPlan = {
+    goal: result.goal,
+    recommendations: result.recommendations ?? [],
+    activities: result.activities ?? [],
+    recommendationSource: result.recommendationSource ?? "Career Coach MCP"
+  };
+  root.innerHTML = `${renderCoachingDashboard(plan)}<div class="planner-actions"><button class="back-button" id="edit" type="button">Edit goal</button></div>`;
+  root.querySelectorAll<HTMLButtonElement>("[data-start-activity]").forEach((button) => {
+    button.addEventListener("click", () => updateActivity("start_activity", button.dataset.startActivity));
+  });
+  root.querySelectorAll<HTMLButtonElement>("[data-complete-activity]").forEach((button) => {
+    button.addEventListener("click", () => updateActivity("complete_activity", button.dataset.completeActivity));
+  });
   root.querySelector<HTMLButtonElement>("#edit")?.addEventListener("click", () => {
     currentStep = 0;
     renderStep();
   });
+}
+
+async function updateActivity(toolName: string, activityId: string | undefined): Promise<void> {
+  if (!activityId) return;
+  try {
+    const result = await app.callServerTool({ name: toolName, arguments: { activityId } });
+    renderResult(result.structuredContent as PlannerResult);
+  } catch {
+    const status = root.querySelector<HTMLElement>(".dashboard-status");
+    if (status) status.textContent = "We could not update that activity. Please try again.";
+  }
 }
 
 app.ontoolresult = (result) => {
